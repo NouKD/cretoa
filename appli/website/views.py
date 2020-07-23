@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.validators import EmailValidator
 from .models import Contact, NewsLetter, Presentation, SiteInfo, SocialAccount, Team
 from .forms import ContactForm
@@ -43,4 +43,12 @@ def contact(request):
         'contact_form': contact_form
     }
     
-    return render(request, 'pages/contacts.html', data)    
+    return render(request, 'pages/contacts.html', data) 
+
+def news_letter(request):
+    if request.method == 'POST':
+        newsletter = request.POST.get('newsletter')
+        if newsletter:
+            nl = NewsLetter.objects.create(email=newsletter)
+            nl.save()
+    return redirect(request.META.get('HTTP_REFERER', '/'))         
